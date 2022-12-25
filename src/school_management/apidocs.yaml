@@ -1,0 +1,346 @@
+openapi: 3.0.3
+info:
+  title: School management
+  version: v1
+  license:
+    name: "MIT"
+
+components:
+  parameters:
+    limit:
+      name: limit
+      in: query
+      schema:
+        type: integer
+        default: 50
+      required: false
+      description: "output limit (pagination)"
+    offset:
+      name: offset
+      in: query
+      schema:
+        type: integer
+        default: 0
+      required: false
+      description: "output offset (pagination)"
+    count:
+      name: count
+      in: path
+      schema:
+        type: integer
+        default: 15
+      required: true
+      description: "student count"
+    group_name:
+      name: group_name
+      in: path
+      schema:
+        type: string
+        default: ""
+      required: true
+      description: "group name"
+    course_name:
+      name: course_name
+      in: path
+      schema:
+        type: string
+        default: ""
+      required: true
+      description: "course name"
+    course_name_in_query:
+      name: course_name
+      in: query
+      schema:
+        type: string
+        default: ""
+      required: true
+      description: "course name"
+    student_id:
+      name: student_id
+      in: path
+      schema:
+        type: integer
+        default: 0
+      required: true
+      description: "student ID"
+    courses:
+      name: courses
+      in: query
+      required: true
+      description: "courses"
+      schema:
+        type: array
+        items:
+          type: "string"
+          enum:
+            - "English"
+            - "World Literature"
+            - "Art"
+            - "Physics"
+            - "Chemistry"
+            - "Biology"
+            - "Geology"
+            - "Astronomy"
+            - "Algebra"
+            - "Geometry"
+  responses:
+    groups200:
+      description: groups list
+      content:
+        application/json:
+          schema:
+            type: "object"
+            properties:
+              groups:
+                type: "array"
+                items:
+                  $ref: '#/components/schemas/group'
+        application/xml:
+          schema:
+            type: "object"
+            xml:
+              name: "groups"
+            properties:
+              groups:
+                type: "array"
+                xml:
+                  name: "item"
+                items:
+                  $ref: '#/components/schemas/group'
+    students200:
+      description: students list
+      content:
+        application/json:
+          schema:
+            type: "object"
+            properties:
+              students:
+                type: "array"
+                items:
+                  $ref: '#/components/schemas/student'
+        application/xml:
+          schema:
+            type: "object"
+            xml:
+              name: "students"
+            properties:
+              students:
+                type: "array"
+                xml:
+                  name: "item"
+                items:
+                  $ref: '#/components/schemas/student'
+    student200:
+      description: student
+      content:
+        application/json:
+           schema:
+            $ref: '#/components/schemas/student'
+        application/xml:
+          schema:
+            $ref: '#/components/schemas/student'
+
+    response404:
+      description: no data
+      content:
+        application/json:
+          example:
+            {
+                "message": "Data does not exist."
+            }
+    response400:
+      description: bad data
+      content:
+        application/json:
+          example:
+            {
+                "message": "Invalid data fields:"
+            }
+
+  schemas:
+    group:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+        name:
+          type: "string"
+        students:
+          type: "array"
+          items:
+            type: "object"
+            xml:
+              name: "item"
+            properties:
+              id:
+                type: "integer"
+              first_name:
+                type: "string"
+              last_name:
+                type: "string"
+    course:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+        name:
+          type: "string"
+        description:
+          type: "string"
+    student:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+        first_name:
+          type: "string"
+        last_name:
+          type: "string"
+        group:
+          type: "object"
+          properties:
+            id:
+              type: "integer"
+            name:
+              type: "string"
+        courses:
+          type: "array"
+          items:
+            $ref: '#/components/schemas/course'
+paths:
+  /api/v1/students/:
+    get:
+      summary: Get students list
+      description: ''
+      tags:
+        - student
+      parameters:
+        - $ref: '#/components/parameters/limit'
+        - $ref: '#/components/parameters/offset'
+      responses:
+        '200':
+          $ref: '#/components/responses/students200'
+
+    post:
+      summary: Add a new student
+      description: ''
+      tags:
+        - student
+      requestBody:
+        description: "Student object that needs to be added"
+        required: true
+        content:
+          application/json:
+            schema:
+              type: "object"
+              properties:
+                first_name:
+                  type: "string"
+                last_name:
+                  type: "string"
+            examples:
+              student:
+                summary: "New student"
+                value:
+                  {
+                    "first_name": "Chuck",
+                    "last_name": "Norris"
+                  }
+      responses:
+        '200':
+          $ref: '#/components/responses/student200'
+        '400':
+          $ref: '#/components/responses/response400'
+
+  /api/v1/students/{student_id}:
+    delete:
+      summary: Delete student by student ID
+      description: ''
+      tags:
+        - student
+      parameters:
+       - $ref: '#/components/parameters/student_id'
+      responses:
+        '200':
+          description: "Success"
+        '405':
+          description: "Invalid ID supplied"
+        '404':
+          $ref: '#/components/responses/response404'
+
+  /api/v1/students_add_to_courses/{student_id}:
+    put:
+      summary: Add a student to the course (from a list)
+      description: ''
+      tags:
+        - student
+      parameters:
+       - $ref: '#/components/parameters/student_id'
+       - $ref: '#/components/parameters/courses'
+      responses:
+        '200':
+          $ref: '#/components/responses/student200'
+        '404':
+          $ref: '#/components/responses/response404'
+
+  /api/v1/students_del_from_course/{student_id}:
+    put:
+      summary: Remove the student from one of his or her courses
+      description: ''
+      tags:
+        - student
+      parameters:
+       - $ref: '#/components/parameters/student_id'
+       - $ref: '#/components/parameters/course_name_in_query'
+      responses:
+        '200':
+          $ref: '#/components/responses/student200'
+        '404':
+          $ref: '#/components/responses/response404'
+
+
+  /api/v1/students_by_course/{course_name}:
+    get:
+      summary: Get students related to the course with a course name
+      description: ''
+      tags:
+        - student
+      parameters:
+        - $ref: '#/components/parameters/course_name'
+        - $ref: '#/components/parameters/limit'
+        - $ref: '#/components/parameters/offset'
+      responses:
+        '200':
+          $ref: '#/components/responses/students200'
+        '404':
+          $ref: '#/components/responses/response404'
+
+  /api/v1/groups_by_count/{count}:
+    get:
+      summary: Get all groups with fewer or equal students
+      description: ''
+      tags:
+        - group
+      parameters:
+        - $ref: '#/components/parameters/count'
+        - $ref: '#/components/parameters/limit'
+        - $ref: '#/components/parameters/offset'
+      responses:
+        '200':
+          $ref: '#/components/responses/groups200'
+
+  /api/v1/groups_by_group/{group_name}:
+    get:
+      summary: Get all groups with fewer or equal students, as in the group 'group_name'
+      description: ''
+      tags:
+        - group
+      parameters:
+        - $ref: '#/components/parameters/group_name'
+        - $ref: '#/components/parameters/limit'
+        - $ref: '#/components/parameters/offset'
+      responses:
+        '200':
+          $ref: '#/components/responses/groups200'
+        '400':
+          $ref: '#/components/responses/response404'
