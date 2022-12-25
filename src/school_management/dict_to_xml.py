@@ -1,5 +1,5 @@
-from xml.etree import ElementTree
 from io import BytesIO
+from xml.etree import ElementTree
 
 
 def dict_to_element(data, root: ElementTree.Element = None, root_name: str = "root") -> ElementTree:

@@ -1,9 +1,18 @@
 import random
+
 from sqlalchemy import create_engine, select, func
 from sqlalchemy.orm import sessionmaker, scoped_session, aliased
+
 from .orm import Base, Group, Student, Course
-from .generators import generate_groups, generate_students, generate_courses, \
-    GROUP_MIN_SIZE, GROUP_MAX_SIZE, MIN_COURSES_PER_STUDENT, MAX_COURSES_PER_STUDENT
+from .generators import (
+    generate_groups,
+    generate_students,
+    generate_courses,
+    GROUP_MIN_SIZE,
+    GROUP_MAX_SIZE,
+    MIN_COURSES_PER_STUDENT,
+    MAX_COURSES_PER_STUDENT
+)
 
 
 class DataAccessLayer:
@@ -14,6 +23,7 @@ class DataAccessLayer:
 
     @staticmethod
     def _execute_select_with_pagination(function):
+        """Pagination decorator"""
         def wrapper(self, *args, limit: int = 0, offset: int = 0, **kwargs):
             """
             Make select execution with pagination
@@ -90,8 +100,9 @@ class DataAccessLayer:
 
     def fill_database(self) -> dict:
         """
-        Fill the database with random test data
-        :return: generated test data
+        Fill the database with random generated data
+        :return: generated data
+
         """
 
         groups = generate_groups()
@@ -191,7 +202,7 @@ class DataAccessLayer:
     @_execute_select_with_pagination
     def get_students(self, *args, **kwargs) -> list:
         """
-        Return list of students
+        Return list of all students
         :return: list of objects
 
         """

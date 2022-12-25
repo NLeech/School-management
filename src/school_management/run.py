@@ -1,11 +1,20 @@
 import os
 import json
+
 from flask import Flask, make_response, current_app
 from flask_restful import Api
 from flasgger import Swagger
+
 from .db import DataAccessLayer
-from .api import Students, GroupsByCount, GroupsByGroup, StudentsByCourse, \
-    StudentsDelete, StudentsAddToCourses, StudentsDeleteFromCourse
+from .api import (
+    Students,
+    GroupsByCount,
+    GroupsByGroup,
+    StudentsByCourse,
+    StudentsDelete,
+    StudentsAddToCourses,
+    StudentsDeleteFromCourse
+)
 from .dict_to_xml import dict_to_xml
 
 API_VERSION = 1

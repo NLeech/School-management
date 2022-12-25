@@ -1,12 +1,15 @@
+from typing import Callable
+
 from flask import request, jsonify, make_response, current_app
 from flask_restful import Resource, marshal, abort
 from sqlalchemy.exc import NoResultFound
+
 from .orm import Group, Student
 
 
-def get_data_with_pagination(data_fields: dict, getter, *args, **kwargs) -> list | dict:
+def get_data_with_pagination(data_fields: dict, getter: Callable, *args, **kwargs) -> list | dict:
     """
-    Get data from the database with pagination
+    Gets data from the database with pagination
     :param data_fields:  dict of fields for a response marshalling
     :param getter: function - data getter
     :return: data
@@ -35,12 +38,13 @@ def send_error_response(code: int, message: str) -> None:
 
 
 class Students(Resource):
+    """Contains methods for getting a students list and student create"""
     def get(self):
         data = get_data_with_pagination(Student.get_complete_fields(), current_app.database.get_students)
         return {"data": data, "root_name": "students"}
 
     def post(self):
-        # If parsing is unsuccessful, there is no error thrown . Instead "Bad Request" is returned to the client.
+        # If parsing is unsuccessful, there is no error thrown. Instead, "Bad Request" is returned to the client.
         new_student = request.get_json()
 
         if not isinstance(new_student, dict) \
@@ -53,6 +57,7 @@ class Students(Resource):
 
 
 class StudentsDelete(Resource):
+    """Contains a method for the student delete"""
     def delete(self, student_id: int):
         try:
             current_app.database.delete_student_by_id(student_id)
@@ -63,6 +68,7 @@ class StudentsDelete(Resource):
 
 
 class StudentsByCourse(Resource):
+    """Contain a method for getting all students related to the course with a given name"""
     def get(self, course_name):
         try:
             data = get_data_with_pagination(
@@ -75,6 +81,7 @@ class StudentsByCourse(Resource):
 
 
 class StudentsAddToCourses(Resource):
+    """Contains a method for adding the student to the course (from a list)"""
     def put(self, student_id):
         courses = request.args.getlist("courses")
         if len(courses) == 0:
@@ -96,6 +103,7 @@ class StudentsAddToCourses(Resource):
 
 
 class StudentsDeleteFromCourse(Resource):
+    """Contains a method for removing the student from one of his or her courses"""
     def put(self, student_id):
         course_name = request.args.get("course_name", default=None)
         if course_name is None:
@@ -117,6 +125,7 @@ class StudentsDeleteFromCourse(Resource):
 
 
 class GroupsByCount(Resource):
+    """Contains a method for finding all groups with less or equal student count."""
     def get(self, count):
         data = get_data_with_pagination(
             Group.get_complete_fields(),
@@ -127,6 +136,7 @@ class GroupsByCount(Resource):
 
 
 class GroupsByGroup(GroupsByCount):
+    """Contains a method for finding all groups with less or equal student count than in the given group"""
     def get(self, group_name):
         try:
             # also check group with group_name exists
