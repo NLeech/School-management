@@ -25,9 +25,24 @@ app.config.from_pyfile(os.path.join(".", "../app.conf"))
 api = Api(app, default_mediatype="application/json")
 
 
+def get_connection_string() -> str:
+    if 'IS_DOCKER' in os.environ:
+        connection_string = (f"postgresql://{os.environ.get('PG_USER')}:"
+                             f"{os.environ.get('PG_PASSWD')}@"
+                             f"{os.environ.get('PG_DATABASE_ADDRESS')}/"
+                             f"{os.environ.get('PG_DATABASE')}")
+
+    else:
+        connection_string = (f"postgresql://{app.config['USER']}:"
+                             f"{app.config['PASSWD']}@"
+                             f"{app.config['DATABASE_ADDRESS']}/"
+                             f"{app.config['DATABASE']}")
+    return connection_string
+
+
 @app.before_first_request
 def init_db():
-    current_app.database = create_database_connection()
+    current_app.database = create_database_connection(get_connection_string())
 
 
 @api.representation('application/json')
@@ -52,10 +67,7 @@ def shutdown_session(exception=None):
 def create_database_connection(connection_string: str = None) -> DataAccessLayer:
     """Create DataAccessLayer and make database connection"""
     if connection_string is None:
-        connection_string = (f"postgresql://{app.config['USER']}:"
-                             f"{app.config['PASSWD']}@"
-                             f"{app.config['DATABASE_ADDRESS']}/"
-                             f"{app.config['DATABASE']}")
+        connection_string = get_connection_string()
 
     db = DataAccessLayer(connection_string)
     db.connect()

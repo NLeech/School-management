@@ -9,7 +9,7 @@ from school_management.generators import GROUPS_QTY, STUDENTS_QTY, \
     GROUP_MIN_SIZE, GROUP_MAX_SIZE, \
     MIN_COURSES_PER_STUDENT, MAX_COURSES_PER_STUDENT
 
-TEST_DATABASE = "task_10_sql_foxstudent101664_test"
+TEST_DATABASE = "school_management_test_123"
 
 test_database_connection_string = (f"postgresql://{app.config['USER']}:"
                                    f"{app.config['PASSWD']}@"
