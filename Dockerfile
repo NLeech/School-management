@@ -6,8 +6,8 @@ WORKDIR /SchoolManagement
 
 COPY requirements.txt requirements.txt
 
-RUN apt update && \
-    apt -y --no-install-recommends install gcc libc-dev libpq-dev && \
+RUN apt-get update && \
+    apt-get -y --no-install-recommends install gcc libc-dev libpq-dev && \
     pip3 install -r requirements.txt
 
 COPY . .
@@ -16,5 +16,5 @@ COPY . .
 
 EXPOSE 8080
 
-ENV FLASK_APP = src/school_management/run.py
-CMD flask run --port=8080
+ENV FLASK_APP="src/school_management/run.py"
+CMD flask run --host 0.0.0.0 --port=8080
