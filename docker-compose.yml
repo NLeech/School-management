@@ -1,7 +1,6 @@
 services:
   web:
     build: .
-    command: ./start.sh
     depends_on:
       db:
           condition: service_healthy
