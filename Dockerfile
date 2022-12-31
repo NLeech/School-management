@@ -12,9 +12,4 @@ RUN apt-get update && \
 
 COPY . .
 
-#RUN chmod +x start.sh
-
 EXPOSE 8080
-
-ENV FLASK_APP="src/school_management/run.py"
-CMD flask run --host 0.0.0.0 --port=8080

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-psql -U postgres -c "CREATE USER $PG_USER WITH ENCRYPTED PASSWORD '$PASSWD';"
+psql -U postgres -c "CREATE USER $PG_USER WITH ENCRYPTED PASSWORD '$PG_PASSWD';"
 psql -U postgres -c "ALTER USER $PG_USER CREATEDB;"
 psql -U postgres -c "DROP DATABASE IF EXISTS $PG_DATABASE;"
 psql -U postgres -c "CREATE DATABASE $PG_DATABASE;"
