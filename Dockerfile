@@ -12,4 +12,6 @@ RUN apt-get update && \
 
 COPY . .
 
+RUN chmod +x start.sh
+
 EXPOSE 8080
