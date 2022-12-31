@@ -40,13 +40,19 @@ services:
     networks:
       - back-tier
 
-  # this service runs once to create database tables
-  # it won't run unless you specify the "seed" profile
-  # docker compose --profile seed up -d
-  seed:
+  # this service runs once to fill the database with random data
+  # it won't run unless you specify the "fill" profile
+  # docker compose --profile fill up -d
+  fill:
     image: school-management
-    profiles: ["seed"]
-    command: python /src/fill_database.py
+    profiles: ["fill"]
+    working_dir: /SchoolManagement
+    env_file:
+      - .env
+    environment:
+      - PG_DATABASE_ADDRESS=db
+      - IS_DOCKER=true
+    command: python ./src/fill_database.py
     depends_on:
       web:
         condition: service_healthy
