@@ -7,7 +7,7 @@ WORKDIR /SchoolManagement
 COPY requirements.txt requirements.txt
 
 RUN apt-get update && \
-    apt-get -y --no-install-recommends install gcc libc-dev libpq-dev && \
+    apt-get -y --no-install-recommends install curl gcc libc-dev libpq-dev && \
     pip3 install -r requirements.txt
 
 COPY . .
