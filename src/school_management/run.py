@@ -20,7 +20,7 @@ from .dict_to_xml import dict_to_xml
 API_VERSION = 1
 
 app = Flask(__name__)
-app.config.from_pyfile(os.path.join(".", "../app.conf"))
+app.config.from_pyfile(os.path.join(".", "../../.env"))
 
 api = Api(app, default_mediatype="application/json")
 
@@ -33,10 +33,10 @@ def get_connection_string() -> str:
                              f"{os.environ.get('PG_DATABASE')}")
 
     else:
-        connection_string = (f"postgresql://{app.config['USER']}:"
-                             f"{app.config['PASSWD']}@"
+        connection_string = (f"postgresql://{app.config['PG_USER']}:"
+                             f"{app.config['PG_PASSWD']}@"
                              f"{app.config['DATABASE_ADDRESS']}/"
-                             f"{app.config['DATABASE']}")
+                             f"{app.config['PG_DATABASE']}")
     return connection_string
 
 
