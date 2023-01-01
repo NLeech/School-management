@@ -2,7 +2,7 @@
 
 FROM python:3.10-slim-buster
 
-WORKDIR /SchoolManagement
+WORKDIR /School-management
 
 COPY requirements.txt requirements.txt
 

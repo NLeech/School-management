@@ -11,7 +11,7 @@ services:
       timeout: 10s
       retries: 3
       start_period: 60s
-    working_dir: /SchoolManagement
+    working_dir: /School-management
     env_file:
       - .env
     environment:
@@ -46,7 +46,7 @@ services:
   fill:
     image: school-management
     profiles: ["fill"]
-    working_dir: /SchoolManagement
+    working_dir: /School-management
     env_file:
       - .env
     environment:
