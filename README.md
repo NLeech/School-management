@@ -24,7 +24,8 @@ For example, ".env" file:
     
 If the database and database user don't exist, you can create them by running:
     
-    export $(grep -v '^#' .env | grep -v '^\s*$' | sed 's/\"//g' | xargs -d '\n') && sudo -E -u postgres bash ./postgres_init.sh
+    export $(grep -v '^#' .env | grep -v '^\s*$' | sed 's/\"//g' | xargs -d '\n') && \
+    sudo -E -u postgres bash ./postgres/postgres_init.sh
 
 If it needs, edit postgresql config file pg_hba.conf, refer to [documentation](https://www.postgresql.org/docs/11/auth-pg-hba-conf.html), and restart postgresql server   
 
@@ -36,7 +37,7 @@ Run:
 
     ./start.sh
 
-Then go to [localhost:8080](localhost:8080)
+Then go to [localhost](localhost)
 
 Running tests:  
 in virtual environment run:
@@ -75,6 +76,6 @@ For this run your containers with the command:
 
     docker compose --profile fill up -d
  
-Then go to [localhost:8000](localhost:8000)
+Then go to [localhost](localhost)
 
 [GitHub](https://github.com/NLeech/School-management)
