@@ -1,7 +1,7 @@
 services:
   web:
     build: .
-    image: school-management
+    image: leechlab/school-management:latest
     depends_on:
       db:
         condition: service_healthy
@@ -25,7 +25,7 @@ services:
 
   db:
     build: postgres
-    image: sm_postgres_db
+    image:  leechlab/sm_postgres_db:latest
     env_file:
       - .env
     volumes:
@@ -43,7 +43,7 @@ services:
   # it won't run unless you specify the "fill" profile
   # docker compose --profile fill up -d
   fill:
-    image: school-management
+    image: leechlab/school-management:latest
     profiles: ["fill"]
     working_dir: /School-management
     env_file:

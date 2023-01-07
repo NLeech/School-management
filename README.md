@@ -71,10 +71,10 @@ Run containers:
 
     docker compose up -d
 
-Optionally, you can fill the database with random data for the fist containers run. 
-For this run your containers with the command:
+Optionally, you can fill the database with random data for the first container run. 
+For this run your container with the command:
 
-    docker compose --profile fill up -d
+    docker compose --profile fill up
  
 Then go to [localhost](localhost)
 
