@@ -3,5 +3,6 @@ from school_management import create_database_connection
 
 if __name__ == "__main__":
     db = create_database_connection()
+    db.create_tables()
     db.fill_database()
     print("Database was filled with random data!")

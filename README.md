@@ -10,7 +10,7 @@ Installing and run:
     python3 -m venv env
     source env/bin/activate
     pip install -r requirements.txt
-    chmod 755 postgres_init.sh start.sh
+    chmod 755 postgres/postgres_init.sh start.sh
 
 Create ".env" file with your database credentials.
 For example, ".env" file:
