@@ -1,24 +1,48 @@
 import os
 import json
+
 from flask import Flask, make_response, current_app
 from flask_restful import Api
 from flasgger import Swagger
+
 from .db import DataAccessLayer
-from .api import Students, GroupsByCount, GroupsByGroup, StudentsByCourse, \
-    StudentsDelete, StudentsAddToCourses, StudentsDeleteFromCourse
+from .api import (
+    Students,
+    GroupsByCount,
+    GroupsByGroup,
+    StudentsByCourse,
+    StudentsDelete,
+    StudentsAddToCourses,
+    StudentsDeleteFromCourse
+)
 from .dict_to_xml import dict_to_xml
 
 API_VERSION = 1
 
 app = Flask(__name__)
-app.config.from_pyfile(os.path.join(".", "../app.conf"))
+app.config.from_pyfile(os.path.join(".", "../../.env"))
 
 api = Api(app, default_mediatype="application/json")
 
 
+def get_connection_string() -> str:
+    if 'IS_DOCKER' in os.environ:
+        connection_string = (f"postgresql://{os.environ.get('PG_USER')}:"
+                             f"{os.environ.get('PG_PASSWD')}@"
+                             f"{os.environ.get('PG_DATABASE_ADDRESS')}/"
+                             f"{os.environ.get('PG_DATABASE')}")
+
+    else:
+        connection_string = (f"postgresql://{app.config['PG_USER']}:"
+                             f"{app.config['PG_PASSWD']}@"
+                             f"{app.config['DATABASE_ADDRESS']}/"
+                             f"{app.config['PG_DATABASE']}")
+    return connection_string
+
+
 @app.before_first_request
 def init_db():
-    current_app.database = create_database_connection()
+    current_app.database = create_database_connection(get_connection_string())
 
 
 @api.representation('application/json')
@@ -43,10 +67,7 @@ def shutdown_session(exception=None):
 def create_database_connection(connection_string: str = None) -> DataAccessLayer:
     """Create DataAccessLayer and make database connection"""
     if connection_string is None:
-        connection_string = (f"postgresql://{app.config['USER']}:"
-                             f"{app.config['PASSWD']}@"
-                             f"{app.config['DATABASE_ADDRESS']}/"
-                             f"{app.config['DATABASE']}")
+        connection_string = get_connection_string()
 
     db = DataAccessLayer(connection_string)
     db.connect()

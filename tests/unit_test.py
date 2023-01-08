@@ -9,17 +9,17 @@ from school_management.generators import GROUPS_QTY, STUDENTS_QTY, \
     GROUP_MIN_SIZE, GROUP_MAX_SIZE, \
     MIN_COURSES_PER_STUDENT, MAX_COURSES_PER_STUDENT
 
-TEST_DATABASE = "task_10_sql_foxstudent101664_test"
+TEST_DATABASE = "school_management_test_123"
 
-test_database_connection_string = (f"postgresql://{app.config['USER']}:"
-                                   f"{app.config['PASSWD']}@"
+test_database_connection_string = (f"postgresql://{app.config['PG_USER']}:"
+                                   f"{app.config['PG_PASSWD']}@"
                                    f"{app.config['DATABASE_ADDRESS']}/"
                                    f"{TEST_DATABASE}")
 
-postgres_connection_string = (f"postgresql://{app.config['USER']}:"
-                              f"{app.config['PASSWD']}@"
+postgres_connection_string = (f"postgresql://{app.config['PG_USER']}:"
+                              f"{app.config['PG_PASSWD']}@"
                               f"{app.config['DATABASE_ADDRESS']}/"
-                              "postgres")
+                              f"{app.config['PG_DATABASE']}")
 
 test_data = {}
 
@@ -67,7 +67,7 @@ def tearDownModule():
 class BaseTest(unittest.TestCase):
     def setUp(self):
         self.db = create_database_connection(test_database_connection_string)
-        app.config["DATABASE"] = TEST_DATABASE
+        app.config["PG_DATABASE"] = TEST_DATABASE
         self.app = app.test_client()
 
     def tearDown(self):
