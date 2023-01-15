@@ -2,6 +2,12 @@
 
 See https://docs.docker.com/cloud/ecs-integration/  for deploying Docker containers on ECS
 
+Get source:
+```
+git clone https://github.com/NLeech/School-management.git
+cd School-management
+```
+
 Login to docker hub:
 
 ```
