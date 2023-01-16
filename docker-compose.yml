@@ -17,11 +17,13 @@ services:
     environment:
       - PG_DATABASE_ADDRESS=db
       - IS_DOCKER=true
+      - FILL_DATABASE=${FILL_DATABASE}
     ports:
       - "80:80"
     networks:
       - front-tier
       - back-tier
+    restart: "always"
 
   db:
     build: postgres
@@ -38,26 +40,7 @@ services:
       start_period: 15s
     networks:
       - back-tier
-
-  # this service runs once to fill the database with random data
-  # it won't run unless you specify the "fill" profile
-  # docker compose --profile fill up -d
-  fill:
-    image: leechlab/school-management:latest
-    profiles: ["fill"]
-    working_dir: /School-management
-    env_file:
-      - .env
-    environment:
-      - PG_DATABASE_ADDRESS=db
-      - IS_DOCKER=true
-    command: python ./src/fill_database.py
-    depends_on:
-      web:
-        condition: service_healthy
-    networks:
-      - back-tier
-    restart: "no"
+    restart: "always"
 
 volumes:
   db-data:
