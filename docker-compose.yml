@@ -1,3 +1,5 @@
+version: '3'
+
 services:
   web:
     build: .
@@ -10,7 +12,6 @@ services:
       interval: 60s
       timeout: 10s
       retries: 3
-      start_period: 60s
     working_dir: /School-management
     env_file:
       - .env
@@ -18,10 +19,10 @@ services:
       - PG_DATABASE_ADDRESS=db
       - IS_DOCKER=true
     ports:
-      - "80:80"
+      - "8081:80"
     networks:
-      - front-tier
-      - back-tier
+      front-tier:
+      back-tier:
 
   db:
     build: postgres
@@ -35,7 +36,6 @@ services:
       interval: 30s
       timeout: 10s
       retries: 3
-      start_period: 15s
     networks:
       - back-tier
 
