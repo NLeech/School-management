@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1
 
-FROM postgres:15
+FROM postgres:15-alpine
 
 COPY healthchecks healthchecks
 
