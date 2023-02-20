@@ -19,14 +19,18 @@ from .dict_to_xml import dict_to_xml
 
 API_VERSION = 1
 
+IS_DOCKER = 'IS_DOCKER' in os.environ
+
 app = Flask(__name__)
-app.config.from_pyfile(os.path.join(".", "../../.env"))
+
+if not IS_DOCKER:
+    app.config.from_pyfile(os.path.join(".", "../../.env"))
 
 api = Api(app, default_mediatype="application/json")
 
 
 def get_connection_string() -> str:
-    if 'IS_DOCKER' in os.environ:
+    if IS_DOCKER:
         connection_string = (f"postgresql://{os.environ.get('PG_USER')}:"
                              f"{os.environ.get('PG_PASSWD')}@"
                              f"{os.environ.get('PG_DATABASE_ADDRESS')}/"
