@@ -23,6 +23,7 @@ services:
     networks:
       front-tier:
       back-tier:
+    restart: "unless-stopped"
 
   db:
     build: postgres
@@ -38,6 +39,7 @@ services:
       retries: 3
     networks:
       - back-tier
+    restart: "unless-stopped"
 
   # this service runs once to fill the database with random data
   # it won't run unless you specify the "fill" profile
