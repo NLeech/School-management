@@ -1,6 +1,5 @@
 #!/bin/bash
 
-python ./src/create_tables.py
-
-export FLASK_APP=./src/school_management/run.py
-flask run --host 0.0.0.0  --port=80
+cd src
+python create_tables.py
+gunicorn --bind 0.0.0.0:80 -w 1 wsgi:app
