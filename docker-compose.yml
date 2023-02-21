@@ -18,6 +18,7 @@ services:
     environment:
       - PG_DATABASE_ADDRESS=db
       - IS_DOCKER=true
+      - FILL_DATABASE=${FILL_DATABASE}
     ports:
       - "8081:80"
     networks:

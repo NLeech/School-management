@@ -2,6 +2,12 @@
 
 See https://docs.docker.com/cloud/ecs-integration/  for deploying Docker containers on ECS
 
+Get source:
+```
+git clone https://github.com/NLeech/School-management.git
+cd School-management
+```
+
 Login to docker hub:
 
 ```
@@ -31,7 +37,7 @@ docker context use  school-management
 Optionally, you can fill the database with random data for the first container run. 
 For this run your container with the command:
 ```
-docker compose --profile fill up
+FILL_DATABASE="fill" docker compose up
 ```
 
 Run application:
