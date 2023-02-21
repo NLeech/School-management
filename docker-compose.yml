@@ -1,3 +1,5 @@
+version: '3'
+
 services:
   web:
     build: .
@@ -10,7 +12,6 @@ services:
       interval: 60s
       timeout: 10s
       retries: 3
-      start_period: 60s
     working_dir: /School-management
     env_file:
       - .env
@@ -19,11 +20,11 @@ services:
       - IS_DOCKER=true
       - FILL_DATABASE=${FILL_DATABASE}
     ports:
-      - "80:80"
+      - "8081:80"
     networks:
-      - front-tier
-      - back-tier
-    restart: "always"
+      front-tier:
+      back-tier:
+    restart: "unless-stopped"
 
   db:
     build: postgres
@@ -37,10 +38,29 @@ services:
       interval: 30s
       timeout: 10s
       retries: 3
-      start_period: 15s
     networks:
       - back-tier
-    restart: "always"
+    restart: "unless-stopped"
+
+  # this service runs once to fill the database with random data
+  # it won't run unless you specify the "fill" profile
+  # docker compose --profile fill up -d
+  fill:
+    image: leechlab/school-management:latest
+    profiles: ["fill"]
+    working_dir: /School-management
+    env_file:
+      - .env
+    environment:
+      - PG_DATABASE_ADDRESS=db
+      - IS_DOCKER=true
+    command: python ./src/fill_database.py
+    depends_on:
+      web:
+        condition: service_healthy
+    networks:
+      - back-tier
+    restart: "no"
 
 volumes:
   db-data:
