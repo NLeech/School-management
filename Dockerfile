@@ -27,7 +27,7 @@ COPY --from=builder /School-management/requirements.txt .
 
 RUN pip install --no-cache /wheels/*
 
-COPY --chown=django:django . .
+COPY --chown=sm:sm . .
 
 RUN chmod +x start.sh
 
